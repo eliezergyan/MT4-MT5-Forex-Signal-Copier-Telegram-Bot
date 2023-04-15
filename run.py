@@ -607,10 +607,10 @@ def main() -> None:
     dp = updater.dispatcher
 
     # message handler
-    dp.add_handler(CommandHandler("start", welcome))
+    # dp.add_handler(CommandHandler("start", welcome))
 
     # help command handler
-    dp.add_handler(CommandHandler("help", help))
+    # dp.add_handler(CommandHandler("help", help))
 
     # conv_handler = ConversationHandler(
     #     entry_points=[CommandHandler("trade", Trade_Command), CommandHandler("calculate", Calculation_Command)],
