@@ -34,7 +34,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # possibles states for conversation handler
-CALCULATE, TRADE, DECISION = range(3)
+TRADE = range(1)
 
 # allowed FX symbols
 SYMBOLS = ['GBPUSDm', 'EURUSDm', 'US30m', 'XAUUSDm','AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'CADCHF', 'CADJPY', 'CHFJPY', 'EURAUD', 'EURCAD', 'EURCHF', 'EURGBP', 'EURJPY', 'EURNZD', 'EURUSD', 'GBPAUD', 'GBPCAD', 'GBPCHF', 'GBPJPY', 'GBPNZD', 'GBPUSD', 'NOW', 'NZDCAD', 'NZDCHF', 'NZDJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'USDJPY', 'XAGUSD', 'XAUUSD', 'US30']
@@ -578,24 +578,24 @@ def Trade_Command(update: Update, context: CallbackContext) -> int:
 
     return TRADE
 
-def Calculation_Command(update: Update, context: CallbackContext) -> int:
-    """Asks user to enter the trade they would like to calculate trade information for.
+# def Calculation_Command(update: Update, context: CallbackContext) -> int:
+#     """Asks user to enter the trade they would like to calculate trade information for.
 
-    Arguments:
-        update: update from Telegram
-        context: CallbackContext object that stores commonly used objects in handler callbacks
-    """
-    if(not(update.effective_message.chat.username == TELEGRAM_USER)):
-        update.effective_message.reply_text("You are not authorized to use this bot! 🙅🏽‍♂️")
-        return ConversationHandler.END
+#     Arguments:
+#         update: update from Telegram
+#         context: CallbackContext object that stores commonly used objects in handler callbacks
+#     """
+#     if(not(update.effective_message.chat.username == TELEGRAM_USER)):
+#         update.effective_message.reply_text("You are not authorized to use this bot! 🙅🏽‍♂️")
+#         return ConversationHandler.END
 
-    # initializes the user's trade as empty prior to input and parsing
-    context.user_data['trade'] = None
+#     # initializes the user's trade as empty prior to input and parsing
+#     context.user_data['trade'] = None
 
-    # asks user to enter the trade
-    update.effective_message.reply_text("Please enter the trade that you would like to calculate.")
+#     # asks user to enter the trade
+#     update.effective_message.reply_text("Please enter the trade that you would like to calculate.")
 
-    return CALCULATE
+#     return CALCULATE
 
 
 def main() -> None:
@@ -612,12 +612,20 @@ def main() -> None:
     # help command handler
     dp.add_handler(CommandHandler("help", help))
 
+    # conv_handler = ConversationHandler(
+    #     entry_points=[CommandHandler("trade", Trade_Command), CommandHandler("calculate", Calculation_Command)],
+    #     states={
+    #         TRADE: [MessageHandler(Filters.text & ~Filters.command, PlaceTrade)],
+    #         CALCULATE: [MessageHandler(Filters.text & ~Filters.command, CalculateTrade)],
+    #         DECISION: [CommandHandler("yes", PlaceTrade), CommandHandler("no", cancel)]
+    #     },
+    #     fallbacks=[CommandHandler("cancel", cancel)],
+    # )
+
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler("trade", Trade_Command), CommandHandler("calculate", Calculation_Command)],
+        entry_points=[CommandHandler("trade", Trade_Command)],
         states={
             TRADE: [MessageHandler(Filters.text & ~Filters.command, PlaceTrade)],
-            CALCULATE: [MessageHandler(Filters.text & ~Filters.command, CalculateTrade)],
-            DECISION: [CommandHandler("yes", PlaceTrade), CommandHandler("no", cancel)]
         },
         fallbacks=[CommandHandler("cancel", cancel)],
     )
